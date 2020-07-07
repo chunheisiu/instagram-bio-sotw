@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from pathlib import Path
 from typing import Dict
 
 import requests
@@ -9,10 +10,16 @@ from instagram_private_api import Client, ClientTwoFactorRequiredError, ClientEr
 from json_helper import to_json, from_json
 from log_helper import get_logger
 
+# Load config
 with open('config.json') as config_file:
     config = json.load(config_file)
 
+# Init logger
 logger = get_logger(__name__)
+
+# Init settings directory
+settings_path = Path(config['INSTAGRAM']['SETTINGS_PATH'])
+settings_path.mkdir(parents=True, exist_ok=True)
 
 
 def get_formatted_date(fmt: str = '%m/%d', rm_zero_pad: bool = True) -> str:
@@ -65,6 +72,13 @@ def format_sotw(sotw: Dict[str, str]) -> str:
 
 
 def onlogin_callback(api, new_settings_file):
+    """
+    Callback function for Instagram client login.
+
+    :param api: Instagram client
+    :param new_settings_file: settings file path
+    :return:
+    """
     cache_settings = api.settings
     with open(new_settings_file, 'w') as outfile:
         json.dump(cache_settings, outfile, default=to_json)
@@ -79,7 +93,7 @@ def init_ig_client(username: str, password: str) -> Client:
     :param password: password of the account
     :return: Initialized Instagram client
     """
-    settings_file = f'{config["INSTAGRAM"]["SETTINGS_PATH"]}/settings_{username}.json'
+    settings_file = f'{settings_path}/settings_{username}.json'
     api = Client(username, password, on_login=lambda x: onlogin_callback(x, settings_file))
     try:
         if not os.path.isfile(settings_file):
