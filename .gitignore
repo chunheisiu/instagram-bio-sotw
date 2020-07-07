@@ -1,0 +1,8 @@
+**/__pycache__/*
+**/.pytest_cache/*
+**/.ipynb_checkpoints/*
+
+venv/**/*
+
+settings/*
+config.json
