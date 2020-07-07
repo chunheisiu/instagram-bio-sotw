@@ -119,7 +119,7 @@ def update_ig_profile(api: Client, profile: dict):
     """
     try:
         res = api.edit_profile(**profile)
-        logger.info('status: ' + res['status'])
+        logger.info(f'status: {res["status"]}')
     except Exception as e:
         logger.error(e)
 
