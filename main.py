@@ -15,19 +15,23 @@ with open('config.json') as config_file:
 logger = get_logger(__name__)
 
 
-def get_formatted_date(fmt: str = '%m/%d') -> str:
+def get_formatted_date(fmt: str = '%m/%d', rm_zero_pad: bool = True) -> str:
     """
     Format the current date.
 
     :param fmt: format of the date
+    :param rm_zero_pad: remove zero padding from date?
     :return: formatted current date
     """
-    return datetime.now().strftime(fmt)
+    date = datetime.now().strftime(fmt)
+    if rm_zero_pad:
+        date = date.lstrip('0').replace('/0', '/')
+    return date
 
 
 def get_lastfm_user_sotw(username: str) -> Dict[str, str]:
     """
-    Retrieve the SOTW for a user from Last.fm.
+    Retrieve the Song of the Week for a user from Last.fm.
 
     :param username: username of the user
     :return: Dict of `{artist, track}`
@@ -42,17 +46,20 @@ def get_lastfm_user_sotw(username: str) -> Dict[str, str]:
 
     r = requests.get(LAST_FM_URL, params=last_fm_params, headers={'User-Agent': 'Mozilla/5.0'})
     track = r.json()['toptracks']['track']
+    logger.info('Retrieved Song of the Week from Last.fm')
     if len(track) < 1:
         raise IndexError('At least one track is expected to return from Last.fm')
     track = track[0]
-    return {'artist': track['artist']['name'], 'name': track['name']}
+    track_dict = {'artist': track['artist']['name'], 'name': track['name']}
+    logger.info(f'Song of the Week: {track_dict}')
+    return track_dict
 
 
 def format_sotw(sotw: Dict[str, str]) -> str:
     """
-    Format the SOTW
+    Format the Song of the Week.
     :param sotw: dict of {artist, track}
-    :return: SOTW formatted "artist – track name"
+    :return: SOTW formatted as "artist – track name"
     """
     return f'{sotw["artist"]} – {sotw["name"]}'
 
@@ -77,16 +84,18 @@ def init_ig_client(username: str, password: str) -> Client:
     try:
         if not os.path.isfile(settings_file):
             # Create a new login if existing settings is not found
-            logger.info('Unable to find file: {0!s}'.format(settings_file))
+            logger.info(f'Unable to find file: {settings_file!s}')
             api.login()
         else:
             # Reuse saved settings
             with open(settings_file) as file_data:
                 cached_settings = json.load(file_data, object_hook=from_json)
-            logger.info('Reusing settings: {0!s}'.format(settings_file))
+            logger.info(f'Reusing settings: {settings_file!s}')
             api = Client(username, password, settings=cached_settings)
+        logger.info('Logged in')
         return api
     except ClientTwoFactorRequiredError as e:
+        logger.info('2FA Required')
         # 2FA authentication is required
         response = json.loads(e.error_response)
         two_factor_info = response['two_factor_info']
@@ -94,6 +103,7 @@ def init_ig_client(username: str, password: str) -> Client:
         verification_code = input('Enter verification code: ')
         try:
             api.login2fa(two_factor_identifier, verification_code)
+            logger.info('Logged in')
             return api
         except ClientError as e:
             logger.error(e.error_response)
@@ -109,7 +119,7 @@ def update_ig_profile(api: Client, profile: dict):
     """
     try:
         res = api.edit_profile(**profile)
-        logger.info(res)
+        logger.info('status: ' + res['status'])
     except Exception as e:
         logger.error(e)
 
