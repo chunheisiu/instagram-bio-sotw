@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Dict
 
 import requests
-from instagram_private_api import Client, ClientTwoFactorRequiredError, ClientError
 import zhon.hanzi
+from instagram_private_api import Client, ClientTwoFactorRequiredError, ClientError
 
 from json_helper import to_json, from_json
 from log_helper import get_logger
