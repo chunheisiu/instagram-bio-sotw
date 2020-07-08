@@ -4,3 +4,4 @@ idna==2.10
 -e git+https://git@github.com/pbotsman/instagram_private_api.git@c648bcfb31701fd8ff67f2fb4ab3f9ec2bbd0db1#egg=instagram_private_api
 requests==2.24.0
 urllib3==1.25.9
+zhon==1.1.5

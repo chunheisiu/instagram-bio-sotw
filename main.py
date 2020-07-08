@@ -1,11 +1,13 @@
 import json
 import os
-from datetime import datetime
+import re
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict
 
 import requests
 from instagram_private_api import Client, ClientTwoFactorRequiredError, ClientError
+import zhon.hanzi
 
 from json_helper import to_json, from_json
 from log_helper import get_logger
@@ -24,13 +26,15 @@ settings_path.mkdir(parents=True, exist_ok=True)
 
 def get_formatted_date(fmt: str = '%m/%d', rm_zero_pad: bool = True) -> str:
     """
-    Format the current date.
+    Format the date of start of week.
 
     :param fmt: format of the date
     :param rm_zero_pad: remove zero padding from date?
     :return: formatted current date
     """
-    date = datetime.now().strftime(fmt)
+    today = datetime.now().date()
+    date = today - timedelta(days=today.weekday())
+    date = date.strftime(fmt)
     if rm_zero_pad:
         date = date.lstrip('0').replace('/0', '/')
     return date
@@ -51,12 +55,14 @@ def get_lastfm_user_sotw(username: str) -> Dict[str, str]:
                       'limit': 1,
                       'period': '7day'}
 
+    # Retrieve the SOTW from Last.fm
     r = requests.get(LAST_FM_URL, params=last_fm_params, headers={'User-Agent': 'Mozilla/5.0'})
     track = r.json()['toptracks']['track']
     logger.info('Retrieved Song of the Week from Last.fm')
     if len(track) < 1:
         raise IndexError('At least one track is expected to return from Last.fm')
     track = track[0]
+    # Extract the artist and tack name from the JSON response
     track_dict = {'artist': track['artist']['name'], 'name': track['name']}
     logger.info(f'Song of the Week: {track_dict}')
     return track_dict
@@ -68,7 +74,14 @@ def format_sotw(sotw: Dict[str, str]) -> str:
     :param sotw: dict of {artist, track}
     :return: SOTW formatted as "artist – track name"
     """
-    return f'{sotw["artist"]} – {sotw["name"]}'
+    sotw_str = f'{sotw["artist"]} – {sotw["name"]}'
+    # Separate CJK and non-CJK characters
+    sotw_str_non_cjk = re.findall('[^{}]'.format(zhon.hanzi.characters), sotw_str)
+    sotw_str_cjk = re.findall('[{}]'.format(zhon.hanzi.characters), sotw_str)
+    # Calculate the length of the string with len(CJK characters) * 2
+    sotw_str_len = len(sotw_str_non_cjk) + 2 * len(sotw_str_cjk)
+    # Append \n if string is longer than 25 characters
+    return f'\n{sotw_str}' if sotw_str_len > 25 else sotw_str
 
 
 def onlogin_callback(api, new_settings_file):
