@@ -33,7 +33,7 @@ def get_formatted_date(fmt: str = '%m/%d', rm_zero_pad: bool = True) -> str:
     :return: formatted current date
     """
     today = datetime.now().date()
-    date = today - timedelta(days=today.weekday())
+    date = today - timedelta(days=(today.weekday() + 1) % 7)
     date = date.strftime(fmt)
     if rm_zero_pad:
         date = date.lstrip('0').replace('/0', '/')
