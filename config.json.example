@@ -1,0 +1,26 @@
+{
+  "LAST_FM": {
+    "KEY": "<your last.fm API key>",
+    "USERNAME": "<your Last.fm username>"
+  },
+  "CRON": {
+    "SCHEDULE": "0 0 * * 0",
+    "COMMENT": "instagram-bio-sotw",
+    "USERNAME": "<your local username>",
+    "VENV": "venv"
+  },
+  "INSTAGRAM": {
+    "ID": <your Instagram id>,
+    "USERNAME": "<your Instagram username>",
+    "PASSWORD": "<your Instagram password>",
+    "PROFILE": {
+      "first_name": "<your Instagram name>",
+      "biography": "🎧 song of the week ({date}): {track}",
+      "external_url": "<your Instagram website>",
+      "email": "<your Instagram email>",
+      "phone_number": "<your Instagram phone number>",
+      "gender": <your Instagram gender>
+    },
+    "SETTINGS_PATH": "settings"
+  }
+}
