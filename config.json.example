@@ -19,7 +19,7 @@
       "external_url": "<your Instagram website>",
       "email": "<your Instagram email>",
       "phone_number": "<your Instagram phone number>",
-      "gender": <your Instagram gender>
+      "gender": <your Instagram gender (male: 1, female: 2, unspecified: 3)>
     },
     "SETTINGS_PATH": "settings"
   }
