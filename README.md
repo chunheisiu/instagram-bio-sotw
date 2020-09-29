@@ -16,5 +16,7 @@ This repository contains the source files for `instagram-bio-sotw`, a Python app
 
 ### Run
 To run the application once, run `python main.py`.
+If you have 2FA enabled on your account, you will be prompted to enter the verification code on the first login attempt.
+Subsequent login attempts will reuse the same login token.
 
 To setup a cron job to automatically run the application weekly, run `python cron.py`.
