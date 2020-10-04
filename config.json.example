@@ -23,4 +23,5 @@
     },
     "SETTINGS_PATH": "settings"
   }
+  "DATE_FMT": "%m/%d"
 }

@@ -153,7 +153,7 @@ def update_ig_profile(api: Client, profile: dict):
 
 if __name__ == '__main__':
     # Get the current date
-    curr_date = get_formatted_date()
+    curr_date = get_formatted_date(config['DATE_FMT'])
 
     # Get the SOTW from Last.fm
     user_sotw = get_lastfm_user_sotw(config['LAST_FM']['USERNAME'])
