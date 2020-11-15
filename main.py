@@ -111,7 +111,8 @@ def init_ig_client(username: str, password: str) -> Client:
     try:
         if not os.path.isfile(settings_file):
             # Create a new login if existing settings is not found
-            logger.info(f'Unable to find file: {settings_file!s}')
+            logger.error(f'Unable to find file: {settings_file!s}')
+            logger.info(f'Attempt new login request for {username}...')
             api.login()
         else:
             # Reuse saved settings
@@ -135,7 +136,7 @@ def init_ig_client(username: str, password: str) -> Client:
         except ClientError as e:
             logger.error(e.error_response)
     except ClientError as e:
-        logger.error(e)
+        logger.error(e.error_response)
 
 
 def update_ig_profile(api: Client, profile: dict):
