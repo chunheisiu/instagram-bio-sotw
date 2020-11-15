@@ -134,6 +134,8 @@ def init_ig_client(username: str, password: str) -> Client:
             return api
         except ClientError as e:
             logger.error(e.error_response)
+    except ClientError as e:
+        logger.error(e)
 
 
 def update_ig_profile(api: Client, profile: dict):
@@ -165,4 +167,5 @@ if __name__ == '__main__':
 
     # Initialize the Instagram client and update profile
     ig_client = init_ig_client(config['INSTAGRAM']['USERNAME'], config['INSTAGRAM']['PASSWORD'])
-    update_ig_profile(ig_client, ig_profile)
+    if ig_client:
+        update_ig_profile(ig_client, ig_profile)
