@@ -1,4 +1,4 @@
-certifi==2020.11.8
+certifi==2020.12.5
 chardet==3.0.4
 idna==2.10
 -e git+https://git@github.com/pbotsman/instagram_private_api.git@c648bcfb31701fd8ff67f2fb4ab3f9ec2bbd0db1#egg=instagram_private_api
