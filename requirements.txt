@@ -4,7 +4,7 @@ idna==2.10
 -e git+https://git@github.com/pbotsman/instagram_private_api.git@c648bcfb31701fd8ff67f2fb4ab3f9ec2bbd0db1#egg=instagram_private_api
 python-crontab==2.5.1
 python-dateutil==2.8.1
-requests==2.25.0
+requests==2.25.1
 six==1.15.0
 urllib3==1.26.2
 zhon==1.1.5
