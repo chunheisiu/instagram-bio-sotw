@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict
@@ -17,11 +18,14 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 
 # Init logger
-logger = get_logger(__name__)
+handler_type = 'stream'
+if len(sys.argv) == 2:
+    handler_type = sys.argv[1]
+logger = get_logger(config=config, module=__name__, handler_type=handler_type)
 
 # Init settings directory
-settings_path = Path(config['INSTAGRAM']['SETTINGS_PATH'])
-settings_path.mkdir(parents=True, exist_ok=True)
+settings_file_dir = Path(config['INSTAGRAM']['SETTINGS_FILE_DIR'])
+settings_file_dir.mkdir(parents=True, exist_ok=True)
 
 
 def get_formatted_date(fmt: str = '%m/%d', rm_zero_pad: bool = True) -> str:
@@ -76,8 +80,8 @@ def format_sotw(sotw: Dict[str, str]) -> str:
     """
     sotw_str = f'{sotw["artist"]} – {sotw["name"]}'
     # Separate CJK and non-CJK characters
-    sotw_str_non_cjk = re.findall('[^{}]'.format(zhon.hanzi.characters), sotw_str)
-    sotw_str_cjk = re.findall('[{}]'.format(zhon.hanzi.characters), sotw_str)
+    sotw_str_non_cjk = re.findall(f'[^{zhon.hanzi.characters}]', sotw_str)
+    sotw_str_cjk = re.findall(f'[{zhon.hanzi.characters}]', sotw_str)
     # Calculate the length of the string with len(CJK characters) * 2
     sotw_str_len = len(sotw_str_non_cjk) + 2 * len(sotw_str_cjk)
     # Append \n if string is longer than 25 characters
@@ -106,7 +110,7 @@ def init_ig_client(username: str, password: str) -> Client:
     :param password: password of the account
     :return: Initialized Instagram client
     """
-    settings_file = f'{settings_path}/settings_{username}.json'
+    settings_file = f'{settings_file_dir}/settings_{username}.json'
     api = Client(username, password, on_login=lambda x: onlogin_callback(x, settings_file))
     try:
         if not os.path.isfile(settings_file):

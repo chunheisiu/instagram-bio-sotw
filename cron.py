@@ -1,16 +1,14 @@
 import json
 import os
 import sys
+from typing import Dict, Union
 
 from crontab import CronTab
 
 from log_helper import get_logger
 
-# Init logger
-logger = get_logger(__name__)
 
-
-def add_job(config: dict):
+def add_job(config: Dict[str, Union[dict, str]]):
     """
     Add a cron job to CronTab.
 
@@ -29,7 +27,7 @@ def add_job(config: dict):
 
     # Remove existing job and add job
     cron.remove_all(comment=job_comment)
-    job = cron.new(command=f'cd {path} && {path}/{config["CRON"]["VENV"]}/bin/python {path}/main.py',
+    job = cron.new(command=f'cd {path} && {path}/{config["CRON"]["VENV"]}/bin/python {path}/main.py file',
                    comment=job_comment)
     job.setall(job_pattern)
     cron.write()
@@ -58,6 +56,9 @@ def remove_job(config: dict):
 # Load config
 with open('config.json') as config_file:
     config_file = json.load(config_file)
+
+# Init logger
+logger = get_logger(config=config_file, module=__name__, handler_type='stream')
 
 # Determine what operation to perform according to sys args
 if len(sys.argv) == 1:

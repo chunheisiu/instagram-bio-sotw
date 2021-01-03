@@ -1,13 +1,18 @@
 {
-  "LAST_FM": {
-    "KEY": "<your last.fm API key>",
-    "USERNAME": "<your Last.fm username>"
+  "LOGGER": {
+    "FORMAT": "[%(asctime)s][%(levelname)s][%(module)s: %(funcName)s] %(message)s",
+    "DATE_FORMAT": "%m/%d/%Y %H:%M:%S",
+    "LOG_FILE_DIR": "logs"
   },
   "CRON": {
     "SCHEDULE": "0 0 * * 0",
     "COMMENT": "instagram-bio-sotw",
     "USERNAME": "<your local username>",
     "VENV": "venv"
+  },
+  "LAST_FM": {
+    "KEY": "<your last.fm API key>",
+    "USERNAME": "<your Last.fm username>"
   },
   "INSTAGRAM": {
     "ID": <your Instagram id>,
@@ -21,7 +26,7 @@
       "phone_number": "<your Instagram phone number>",
       "gender": <your Instagram gender (male: 1, female: 2, unspecified: 3)>
     },
-    "SETTINGS_PATH": "settings"
+    "SETTINGS_FILE_DIR": "settings"
   }
   "DATE_FMT": "%m/%d"
 }
