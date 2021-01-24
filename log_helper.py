@@ -32,7 +32,7 @@ def get_logger(config: Dict[str, Union[dict, str]], module: str, handler_type: O
     elif handler_type.lower() == 'file':
         log_file_dir = Path(config['LOGGER']['LOG_FILE_DIR'])
         log_file_dir.mkdir(parents=True, exist_ok=True)
-        handler = logging.FileHandler(f'{log_file_dir}/{module}_log.log')
+        handler = logging.FileHandler(f'{log_file_dir}/{module}.log')
     # Set formatter and add handler
     handler.setFormatter(formatter)
     logger.addHandler(handler)
