@@ -1,10 +1,10 @@
 certifi==2020.12.5
 chardet==4.0.0
 idna==2.10
--e git+https://git@github.com/chunheisiu/instagram_private_api.git@c648bcfb31701fd8ff67f2fb4ab3f9ec2bbd0db1#egg=instagram_private_api
+instagrapi==1.7.9
 python-crontab==2.5.1
 python-dateutil==2.8.1
 requests==2.25.1
-six==1.15.0
+six==1.16.0
 urllib3==1.26.4
 zhon==1.1.5
