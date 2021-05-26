@@ -15,18 +15,17 @@
     "USERNAME": "<your Last.fm username>"
   },
   "INSTAGRAM": {
-    "ID": <your Instagram id>,
     "USERNAME": "<your Instagram username>",
     "PASSWORD": "<your Instagram password>",
     "PROFILE": {
-      "first_name": "<your Instagram name>",
-      "biography": "🎧 song of the week ({date}): {track}",
-      "external_url": "<your Instagram website>",
       "email": "<your Instagram email>",
       "phone_number": "<your Instagram phone number>",
-      "gender": <your Instagram gender (male: 1, female: 2, unspecified: 3)>
+      "username": "<your Instagram username>",
+      "full_name": "<your Instagram name>",
+      "biography": "🎧 song of the week ({date}): {track}",
+      "external_url": "<your website>"
     },
     "SETTINGS_FILE_DIR": "settings"
   }
-  "DATE_FMT": "%m/%d"
+  "DATE_FMT": "%b %-d"
 }
