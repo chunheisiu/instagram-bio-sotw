@@ -1,9 +1,9 @@
 certifi==2021.5.30
 chardet==4.0.0
 idna==3.2
-instagrapi==1.13.6
+instagrapi==1.14.5
 Pillow==8.3.2
-pycryptodomex==3.10.4
+pycryptodomex==3.11.0
 pydantic==1.8.2
 PySocks==1.7.1
 python-crontab==2.5.1
