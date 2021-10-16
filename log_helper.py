@@ -6,7 +6,7 @@ from typing import Dict, Union, Optional
 def get_logger(config: Dict[str, Union[dict, str]], module: str, handler_type: Optional[str] = 'stream'):
     """
     Get or initialize the logger for the module.
-    In each module, add::
+    In each module, add:
      >>> from log_helper import get_logger
      >>> module_logger = get_logger(__name__)
     Then, call :meth:`logger.info` or :meth:`logger.error`

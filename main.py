@@ -144,7 +144,12 @@ def update_ig_profile(client: Client, profile: dict):
         logger.error(e)
 
 
-if __name__ == '__main__':
+def main():
+    """
+    Main method.
+
+    :return:
+    """
     # Get the current date
     curr_date = get_formatted_date(config['DATE_FMT'])
 
@@ -160,3 +165,7 @@ if __name__ == '__main__':
     ig_client = init_ig_client(config['INSTAGRAM']['USERNAME'], config['INSTAGRAM']['PASSWORD'])
     if ig_client:
         update_ig_profile(ig_client, ig_profile)
+
+
+if __name__ == '__main__':
+    main()
