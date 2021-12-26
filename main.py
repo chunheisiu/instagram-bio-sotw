@@ -4,8 +4,9 @@ import re
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 
+import pyotp
 import requests
 import zhon.hanzi
 from instagrapi import Client
@@ -90,12 +91,13 @@ def format_sotw(sotw: Dict[str, str]) -> str:
     return f'\n{sotw_str}' if sotw_str_len > 25 else sotw_str
 
 
-def init_ig_client(username: str, password: str) -> Client:
+def init_ig_client(username: str, password: str, otp: Optional[str] = None) -> Client:
     """
     Initialize the Instagram client.
 
     :param username: username of the account
     :param password: password of the account
+    :param otp: OTP code of the account
     :return: Initialized Instagram client
     """
     settings_file = Path(f'{settings_file_dir}/settings_{username}.json')
@@ -111,9 +113,13 @@ def init_ig_client(username: str, password: str) -> Client:
     except TwoFactorRequired:
         # 2FA authentication is required
         logger.info('Login failed: 2FA required')
-        verification_code = input('Enter verification code: ')
+        if otp is not None:
+            totp = pyotp.TOTP(otp)
+            verification_code = totp.now()
+        else:
+            verification_code = input('Enter verification code: ')
         try:
-            # Attempt to login with verification code
+            # Attempt to log in with verification code
             logger.info(f'Attempt to login with username {username}...')
             client.login(username=username, password=password, verification_code=verification_code)
         except ClientError as e:
@@ -158,11 +164,16 @@ def main():
     user_sotw = format_sotw(user_sotw)
 
     # Load the profile from config and update with current date and SOTW
-    ig_profile = config['INSTAGRAM']['PROFILE']
+    INSTAGRAM_CONFIG = config['INSTAGRAM']
+    ig_profile = INSTAGRAM_CONFIG.get('PROFILE')
     ig_profile['biography'] = ig_profile['biography'].format(date=curr_date, track=user_sotw)
 
     # Initialize the Instagram client and update profile
-    ig_client = init_ig_client(config['INSTAGRAM']['USERNAME'], config['INSTAGRAM']['PASSWORD'])
+    ig_client = init_ig_client(
+        INSTAGRAM_CONFIG.get('USERNAME'),
+        INSTAGRAM_CONFIG.get('PASSWORD'),
+        INSTAGRAM_CONFIG.get('OTP')
+    )
     if ig_client:
         update_ig_profile(ig_client, ig_profile)
 

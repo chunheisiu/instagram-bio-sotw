@@ -17,6 +17,7 @@
   "INSTAGRAM": {
     "USERNAME": "<your Instagram username>",
     "PASSWORD": "<your Instagram password>",
+    "MFA: "<your Instagram MFA code>",
     "PROFILE": {
       "email": "<your Instagram email>",
       "phone_number": "<your Instagram phone number>",
