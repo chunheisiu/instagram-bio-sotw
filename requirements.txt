@@ -2,7 +2,7 @@ certifi==2021.10.8
 chardet==4.0.0
 charset-normalizer==2.0.12
 idna==3.3
-instagrapi==1.16.16
+instagrapi==1.16.17
 Pillow==9.1.0
 pycryptodomex==3.12.0
 pydantic==1.9.0
@@ -12,6 +12,6 @@ python-crontab==2.6.0
 python-dateutil==2.8.2
 requests==2.27.1
 six==1.16.0
-typing-extensions==4.1.1
+typing-extensions==4.2.0
 urllib3==1.26.9
 zhon==1.1.5
