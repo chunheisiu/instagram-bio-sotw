@@ -1,10 +1,10 @@
 certifi==2022.6.15
 chardet==4.0.0
-charset-normalizer==2.0.12
+charset-normalizer==2.1.0
 idna==3.3
 instagrapi==1.16.20
 Pillow==9.1.1
-pycryptodomex==3.14.1
+pycryptodomex==3.15.0
 pydantic==1.9.1
 pyotp==2.6.0
 PySocks==1.7.1
