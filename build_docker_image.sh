@@ -1,3 +1,3 @@
 docker build \
-  --label instagram-bio-sotw:latest \
+  -t chunheisu/instagram-bio-sotw:latest \
   .
