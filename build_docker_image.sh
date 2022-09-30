@@ -1,3 +1,3 @@
 docker build \
-  -t chunheisu/instagram-bio-sotw:latest \
+  --tag chunheisiu/instagram-bio-sotw:latest \
   .
