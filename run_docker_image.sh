@@ -1,3 +1,4 @@
 docker run \
-  --volume settings:/usr/app/settings \
+  -v settings:/usr/app/settings \
+  -e TZ=Asia/Hong_Kong \
   chunheisiu/instagram-bio-sotw:latest
