@@ -1,4 +1,4 @@
-instagrapi==1.16.41
+instagrapi==1.17.1
 pillow==9.4.0
 pycryptodomex==3.17
 pyotp==2.8.0
