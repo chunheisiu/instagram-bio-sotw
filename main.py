@@ -52,7 +52,7 @@ def get_lastfm_user_sotw(username: str) -> Dict[str, str]:
     :param username: username of the user
     :return: Dict of `{artist, track}`
     """
-    LAST_FM_URL = f'https://ws.audioscrobbler.com/2.0/'
+    last_fm_url = f'https://ws.audioscrobbler.com/2.0/'
     last_fm_params = {'method': 'user.gettoptracks',
                       'format': 'json',
                       'user': username,
@@ -62,7 +62,7 @@ def get_lastfm_user_sotw(username: str) -> Dict[str, str]:
 
     # Retrieve the SOTW from Last.fm
     logger.info('Retrieving Song of the Week from Last.fm...')
-    r = requests.get(LAST_FM_URL, params=last_fm_params, headers={'User-Agent': 'Mozilla/5.0'})
+    r = requests.get(last_fm_url, params=last_fm_params, headers={'User-Agent': 'Mozilla/5.0'})
     track = r.json()['toptracks']['track']
 
     if len(track) < 1:
@@ -164,15 +164,15 @@ def main():
     user_sotw = format_sotw(user_sotw)
 
     # Load the profile from config and update with current date and SOTW
-    INSTAGRAM_CONFIG = config['INSTAGRAM']
-    ig_profile = INSTAGRAM_CONFIG.get('PROFILE')
+    instagram_config = config['INSTAGRAM']
+    ig_profile = instagram_config.get('PROFILE')
     ig_profile['biography'] = ig_profile['biography'].format(date=curr_date, track=user_sotw)
 
     # Initialize the Instagram client and update profile
     ig_client = init_ig_client(
-        INSTAGRAM_CONFIG.get('USERNAME'),
-        INSTAGRAM_CONFIG.get('PASSWORD'),
-        INSTAGRAM_CONFIG.get('OTP')
+        instagram_config.get('USERNAME'),
+        instagram_config.get('PASSWORD'),
+        instagram_config.get('OTP')
     )
     if ig_client:
         update_ig_profile(ig_client, ig_profile)
