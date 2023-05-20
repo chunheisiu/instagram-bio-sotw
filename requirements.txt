@@ -1,6 +1,6 @@
 instagrapi==1.17.10
 pillow==9.5.0
-pycryptodomex==3.18.0
+pycryptodomex==3.17
 pyotp==2.8.0
 python-crontab==2.7.1
 requests==2.30.0
