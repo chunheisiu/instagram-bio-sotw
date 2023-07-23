@@ -1,7 +1,7 @@
-instagrapi==1.17.10
-pillow==9.5.0
-pycryptodomex==3.17.0
+instagrapi==1.18.1
+pillow==10.0.0
+pycryptodomex==3.18.0
 pyotp==2.8.0
-python-crontab==2.7.1
+python-crontab==3.0.0
 requests==2.31.0
-zhon==1.1.5
+zhon==2.0.2
