@@ -1,7 +1,7 @@
+import argparse
 import json
 import os
 import re
-import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Optional
@@ -18,15 +18,17 @@ from log_helper import get_logger
 with open('config.json') as config_file:
     config = json.load(config_file)
 
-# Init logger
-handler_type = 'stream'
-if len(sys.argv) == 2:
-    handler_type = sys.argv[1]
-logger = get_logger(config=config, module=__name__, handler_type=handler_type)
+# Init Arg Parser
+parser = argparse.ArgumentParser(
+    prog='instagram-bio-sotw',
+    description='Update your Instagram bio with your Song of the Week from Last.fm.'
+)
+parser.add_argument('-l', '--log', default='stream')
+args = parser.parse_args()
 
-# Init settings directory
-settings_file_dir = Path(config['INSTAGRAM']['SETTINGS_FILE_DIR'])
-settings_file_dir.mkdir(parents=True, exist_ok=True)
+# Init logger
+handler_type: str = args.log_handler_type
+logger = get_logger(config=config, module=__name__, handler_type=handler_type)
 
 
 def get_formatted_date(fmt: str = '%m/%d', rm_zero_pad: bool = True) -> str:
@@ -91,10 +93,11 @@ def format_sotw(sotw: Dict[str, str]) -> str:
     return f'\n{sotw_str}' if sotw_str_len > 25 else sotw_str
 
 
-def init_ig_client(username: str, password: str, otp: Optional[str] = None) -> Client:
+def init_ig_client(settings_file_dir: Path, username: str, password: str, otp: Optional[str] = None) -> Client:
     """
     Initialize the Instagram client.
 
+    :param settings_file_dir: settings file directory
     :param username: username of the account
     :param password: password of the account
     :param otp: OTP code of the account
@@ -156,6 +159,10 @@ def main():
 
     :return:
     """
+    # Init settings directory
+    settings_file_dir = Path(config['INSTAGRAM']['SETTINGS_FILE_DIR'])
+    settings_file_dir.mkdir(parents=True, exist_ok=True)
+
     # Get the current date
     curr_date = get_formatted_date(config['DATE_FMT'])
 
@@ -170,9 +177,10 @@ def main():
 
     # Initialize the Instagram client and update profile
     ig_client = init_ig_client(
-        instagram_config.get('USERNAME'),
-        instagram_config.get('PASSWORD'),
-        instagram_config.get('OTP')
+        settings_file_dir=settings_file_dir,
+        username=instagram_config.get('USERNAME'),
+        password=instagram_config.get('PASSWORD'),
+        otp=instagram_config.get('OTP')
     )
     if ig_client:
         update_ig_profile(ig_client, ig_profile)

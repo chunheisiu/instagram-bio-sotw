@@ -1,11 +1,18 @@
+import argparse
 import json
 import os
-import sys
 from typing import Dict, Union
 
 from crontab import CronTab
 
 from log_helper import get_logger
+
+# Load config
+with open('config.json') as config_file:
+    config_file = json.load(config_file)
+
+# Init logger
+logger = get_logger(config=config_file, module=__name__, handler_type='stream')
 
 
 def add_job(config: Dict[str, Union[dict, str]]):
@@ -27,7 +34,8 @@ def add_job(config: Dict[str, Union[dict, str]]):
 
     # Remove existing job and add job
     cron.remove_all(comment=job_comment)
-    job = cron.new(command=f'cd {path} && {path}/{config["CRON"]["VENV"]}/bin/python {path}/main.py file',
+    job = cron.new(command=f'cd {path} && {path}/{config["CRON"]["VENV"]}/bin/python {path}/main.py '
+                           f'-l file',
                    comment=job_comment)
     job.setall(job_pattern)
     cron.write()
@@ -53,19 +61,22 @@ def remove_job(config: dict):
     logger.info(f'Removed cron job {job_comment}')
 
 
-# Load config
-with open('config.json') as config_file:
-    config_file = json.load(config_file)
+def main():
+    # Init Arg Parser
+    parser = argparse.ArgumentParser(
+        prog='instagram-bio-sotw',
+        description='Update your Instagram bio with your Song of the Week from Last.fm.'
+    )
+    parser.add_argument('operation', default='add')
+    args = parser.parse_args()
 
-# Init logger
-logger = get_logger(config=config_file, module=__name__, handler_type='stream')
-
-# Determine what operation to perform according to sys args
-if len(sys.argv) == 1:
-    add_job(config_file)
-elif len(sys.argv) == 2:
-    op = sys.argv[1].lower()
-    if op == 'add':
+    # Determine what operation to perform according to sys args
+    operation: str = args.operation
+    if operation.lower() == 'add':
         add_job(config_file)
-    elif op == 'remove':
+    elif operation.lower() == 'remove':
         remove_job(config_file)
+
+
+if __name__ == '__main__':
+    main()
