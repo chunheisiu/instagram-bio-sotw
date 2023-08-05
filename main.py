@@ -27,7 +27,7 @@ parser.add_argument('-l', '--log', default='stream')
 args = parser.parse_args()
 
 # Init logger
-handler_type: str = args.log_handler_type
+handler_type: str = args.log
 logger = get_logger(config=config, module=__name__, handler_type=handler_type)
 
 
