@@ -9,6 +9,7 @@ from typing import Dict, Optional
 import pyotp
 import requests
 import zhon.hanzi
+from chinese_converter import to_traditional, to_simplified
 from instagrapi import Client
 from instagrapi.exceptions import ClientError, TwoFactorRequired
 
@@ -70,8 +71,21 @@ def get_lastfm_user_sotw(username: str) -> Dict[str, str]:
     if len(track) < 1:
         raise IndexError('At least one track is expected to return from Last.fm')
     track = track[0]
-    # Extract the artist and tack name from the JSON response
-    track_dict = {'artist': track['artist']['name'], 'name': track['name']}
+
+    # Extract the artist and track name from the JSON response
+    sotw_artist = track['artist']['name']
+    sotw_track = to_traditional(track['name'])
+
+    # Optionally, convert names in Chinese to all Traditional or Simplified
+    convert_chinese = config['CONVERT_CHINESE_CHAR']
+    if convert_chinese == 1:
+        sotw_artist = to_traditional(sotw_artist)
+        sotw_track = to_traditional(sotw_track)
+    elif convert_chinese == 2:
+        sotw_artist = to_simplified(sotw_artist)
+        sotw_track = to_simplified(sotw_track)
+
+    track_dict = {'artist': sotw_artist, 'name': sotw_track}
     logger.info(f'Song of the Week: {track_dict}')
     logger.info('Retrieved Song of the Week from Last.fm')
     return track_dict

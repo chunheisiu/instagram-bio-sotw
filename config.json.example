@@ -28,5 +28,6 @@
     },
     "SETTINGS_FILE_DIR": "settings"
   }
-  "DATE_FMT": "%b %-d"
+  "DATE_FMT": "%b %-d",
+  "CONVERT_CHINESE_CHAR": 1
 }

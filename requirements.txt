@@ -1,3 +1,4 @@
+chinese-converter==1.1.1
 instagrapi==2.0.3
 pillow==10.1.0
 pycryptodomex==3.19.0
