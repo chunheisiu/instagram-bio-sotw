@@ -1,7 +1,7 @@
 chinese-converter==1.1.1
-instagrapi==2.0.3
-pillow==10.1.0
-pycryptodomex==3.19.0
+instagrapi==2.1.1
+pillow==10.3.0
+pycryptodomex==3.20.0
 pyotp==2.9.0
 python-crontab==3.0.0
 requests==2.31.0
