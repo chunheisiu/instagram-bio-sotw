@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, Union, Optional
 
 
-def get_logger(config: Dict[str, Union[dict, str]], module: str, handler_type: Optional[str] = 'stream'):
+def get_logger(config: Dict[str, Union[dict, str]], module: str, handler_type: str = 'stream'):
     """
     Get or initialize the logger for the module.
     In each module, add:
@@ -20,19 +20,24 @@ def get_logger(config: Dict[str, Union[dict, str]], module: str, handler_type: O
     # Create logger
     logger = logging.getLogger(module)
     logger.setLevel(logging.INFO)
+
     # Set logger format and date format with config params
-    log_fmt = config['LOGGER']['FORMAT']
-    date_fmt = config['LOGGER']['DATE_FORMAT']
+    log_fmt = config['LOGGER']['FORMAT'] # type: ignore
+    date_fmt = config['LOGGER']['DATE_FORMAT'] # type: ignore
     formatter = logging.Formatter(fmt=log_fmt, datefmt=date_fmt)
+
     # Determine handler type
     # Default handler is StreamHandler
     handler = None
     if handler_type.lower() == 'stream':
         handler = logging.StreamHandler()
     elif handler_type.lower() == 'file':
-        log_file_dir = Path(config['LOGGER']['LOG_FILE_DIR'])
+        log_file_dir = Path(config['LOGGER']['LOG_FILE_DIR']) # type: ignore
         log_file_dir.mkdir(parents=True, exist_ok=True)
         handler = logging.FileHandler(f'{log_file_dir}/{module}.log')
+    else:
+        raise ValueError(f'Unsupported handler type: {handler_type}')
+
     # Set formatter and add handler
     handler.setFormatter(formatter)
     logger.addHandler(handler)

@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Optional
 
-import pyotp
 import requests
 import zhon.hanzi
 from chinese_converter import to_traditional, to_simplified
@@ -121,26 +120,20 @@ def init_ig_client(settings_file_dir: Path, username: str, password: str, otp: O
     client = Client()
 
     try:
+        # Init login payload
+        login_payload = {'username': username, 'password': password}
+
         if os.path.isfile(settings_file):
             # Reuse login settings if existing settings is found
             logger.info('Existing settings found')
             client.load_settings(settings_file)
-        logger.info(f'Attempt to login with username {username}...')
-        client.login(username=username, password=password)
-    except TwoFactorRequired:
-        # 2FA authentication is required
-        logger.info('Login failed: 2FA required')
         if otp is not None:
-            totp = pyotp.TOTP(otp)
-            verification_code = totp.now()
-        else:
-            verification_code = input('Enter verification code: ')
-        try:
-            # Attempt to log in with verification code
-            logger.info(f'Attempt to login with username {username}...')
-            client.login(username=username, password=password, verification_code=verification_code)
-        except ClientError as e:
-            logger.error(e.response)
+            # Generate TOTP code if OTP secret is provided
+            verification_code = client.totp_generate_code(otp)
+            login_payload['verification_code'] = verification_code
+
+        logger.info(f'Attempt to login with username {username}...')
+        client.login(**login_payload) # type: ignore
     except ClientError as e:
         logger.error(e.response)
 
